@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
+<title>Happy 23rd Birthday Nikky ✨</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Quicksand:wght@400;500;600;700&family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{
+  --pink:#ff6b9d;--pink-soft:#ffb8d4;--pink-deep:#e8366d;
+  --purple:#a855f7;--purple-deep:#7c3aed;--purple-soft:#d4b5ff;
+  --gold:#fbbf24;--gold-deep:#f59e0b;--gold-soft:#fde68a;
+  --sky:#38bdf8;--sky-deep:#0ea5e9;
+  --ink:#0c0520;--ink-2:#150b30;--ink-3:#1e1145;
+  --cream:#fff9f0;
+}
+html,body{height:100%;overflow:hidden;overscroll-behavior:none}
+body{
+  font-family:'Quicksand',sans-serif;color:var(--cream);
+  background:linear-gradient(170deg,#0a0318 0%,var(--ink) 40%,#120832 100%);
+  position:fixed;inset:0;width:100%;height:100%
+}
+button{font-family:inherit;border:none;outline:none;cursor:pointer;background:none;color:inherit}
+canvas{position:fixed;inset:0;width:100%;height:100%;pointer-events:none}
+#bg-canvas{z-index:1}
+#fx-canvas{z-index:80}
+
+#ambient{position:fixed;inset:0;z-index:3;pointer-events:none;overflow:hidden}
+.bl{
+  position:absolute;bottom:-100px;
+  width:clamp(28px,5vw,42px);height:clamp(34px,6vw,52px);
+  border-radius:50% 50% 50% 50% / 60% 60% 40% 40%;
+  opacity:.8;animation:bF linear forwards,bS ease-in-out infinite;
+}
+.bl::before{content:'';position:absolute;top:12%;left:22%;width:30%;height:24%;border-radius:50%;background:rgba(255,255,255,.5)}
+.bl::after{content:'';position:absolute;left:50%;top:100%;width:1px;height:clamp(20px,4vw,35px);background:rgba(255,255,255,.4);transform:translateX(-50%)}
+@keyframes bF{to{transform:translateY(calc(-100vh - 160px))}}
+@keyframes bS{0%,100%{margin-left:0}50%{margin-left:20px}}
+.fh{position:absolute;bottom:-30px;font-size:clamp(14px,3vw,22px);opacity:.7;animation:hF linear forwards}
+@keyframes hF{to{transform:translateY(calc(-100vh - 80px)) rotate(20deg);opacity:0}}
+.rp{position:absolute;top:-20px;width:12px;height:14px;border-radius:50% 50% 45% 45%;opacity:.75;animation:rF linear forwards}
+@keyframes rF{to{transform:translateY(calc(100vh + 40px)) rotate(360deg);opacity:0}}
+
+#sound-btn{
+  position:fixed;top:max(14px,env(safe-area-inset-top));right:14px;z-index:500;
+  width:44px;height:44px;border-radius:50%;font-size:18px;
+  background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  display:none;align-items:center;justify-content:center;
+  box-shadow:0 4px 20px rgba(0,0,0,.3);transition:transform .2s
+}
+#sound-btn:active{transform:scale(.9)}
+#sound-btn.show{display:flex}
+#skip-btn{
+  position:fixed;top:max(14px,env(safe-area-inset-top));left:14px;z-index:500;
+  padding:8px 16px;border-radius:999px;font-size:12px;font-weight:600;letter-spacing:.04em;
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);display:none;transition:opacity .3s
+}
+#skip-btn.show{display:block}
+
+#start-screen{
+  position:fixed;inset:0;z-index:600;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;text-align:center;padding:6vh 8vw;gap:14px;
+  background:radial-gradient(ellipse 80% 55% at 50% 40%,#1e1145,var(--ink) 78%);
+  transition:opacity 1.2s ease,visibility 1.2s ease
+}
+#start-screen.gone{opacity:0;visibility:hidden;pointer-events:none}
+.start-ey{font-size:11px;letter-spacing:.35em;text-transform:uppercase;color:var(--sky);opacity:.8}
+.start-t{
+  font-family:'Baloo 2',sans-serif;font-weight:800;font-size:clamp(26px,7vw,54px);line-height:1.1;
+  background:linear-gradient(100deg,var(--gold),var(--pink),var(--purple-soft));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 0 20px rgba(255,180,200,.4));animation:tF 3.5s ease-in-out infinite
+}
+@keyframes tF{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+.start-s{font-size:clamp(13px,3.2vw,16px);opacity:.75;max-width:360px;line-height:1.5}
+#begin-btn{
+  margin-top:12px;padding:16px 38px;border-radius:999px;font-family:'Baloo 2',sans-serif;
+  font-weight:700;font-size:clamp(15px,3.8vw,19px);color:#1a0830;
+  background:linear-gradient(120deg,var(--gold),var(--pink));
+  box-shadow:0 8px 32px rgba(255,160,180,.35),inset 0 0 0 1px rgba(255,255,255,.3);
+  animation:bP 2s ease-in-out infinite
+}
+@keyframes bP{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}
+#begin-btn:active{transform:scale(.94)}
+
+#stage{position:relative;z-index:10;width:100%;height:100%}
+.scene{
+  position:absolute;inset:0;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;text-align:center;
+  padding:calc(60px + env(safe-area-inset-top)) 5vw 4vh;
+  opacity:0;pointer-events:none;transition:opacity .9s ease
+}
+.scene.on{opacity:1;pointer-events:auto;z-index:5}
+
+.intro-text{font-size:clamp(17px,4.4vw,30px);font-weight:600;max-width:620px;opacity:0;text-shadow:0 0 20px rgba(255,210,150,.5)}
+.big-23{
+  font-family:'Baloo 2',sans-serif;font-weight:800;font-size:clamp(100px,30vw,240px);line-height:1;
+  background:linear-gradient(160deg,var(--gold),var(--pink) 55%,var(--purple-soft));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 0 35px rgba(255,180,90,.6)) drop-shadow(0 0 70px rgba(255,90,160,.3));opacity:0
+}
+.age-sub{font-size:clamp(12px,2.8vw,16px);letter-spacing:.3em;text-transform:uppercase;color:var(--sky);opacity:0;margin-top:8px}
+
+.scene-label{
+  font-family:'Baloo 2',sans-serif;font-weight:600;font-size:clamp(12px,3.2vw,17px);
+  color:var(--gold);min-height:1.6em;max-width:92vw;margin-bottom:1.4vh;
+  text-shadow:0 0 12px rgba(255,210,140,.4)
+}
+.word-row{display:flex;gap:clamp(3px,1.2vw,10px);justify-content:center;flex-wrap:wrap;margin:3px 0}
+.slot{
+  width:clamp(26px,7vw,52px);height:clamp(34px,9vw,66px);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Baloo 2',sans-serif;font-weight:800;font-size:clamp(18px,5.2vw,38px);
+  border-radius:10px;border:2px dashed rgba(255,255,255,.18);
+  background:rgba(255,255,255,.03);color:#fff;position:relative
+}
+.slot.done{
+  border-style:solid;border-color:var(--gold);
+  background:linear-gradient(155deg,var(--pink-deep),var(--purple-deep));
+  box-shadow:0 0 12px 3px rgba(255,210,140,.5),0 0 30px rgba(255,90,160,.3);
+  text-shadow:0 0 10px var(--gold),0 0 20px var(--pink);
+  animation:sP .45s cubic-bezier(.34,1.56,.64,1)
+}
+@keyframes sP{0%{transform:scale(.2) rotate(-15deg);opacity:0}60%{transform:scale(1.2) rotate(4deg);opacity:1}100%{transform:scale(1) rotate(0)}}
+
+.action-area{position:relative;width:min(680px,95vw);height:clamp(100px,20vh,170px);margin-top:.8vh}
+.cs{position:absolute;width:76px;height:88px;will-change:transform,opacity}
+.cl{
+  position:absolute;font-family:'Baloo 2',sans-serif;font-weight:800;
+  font-size:clamp(24px,6.5vw,46px);color:#fff;
+  text-shadow:0 0 14px var(--gold),0 0 28px var(--pink-deep);will-change:transform,opacity
+}
+.ip{position:absolute;font-size:18px;will-change:transform,opacity;filter:drop-shadow(0 0 5px rgba(255,255,255,.4))}
+
+.finale-title{
+  font-family:'Baloo 2',sans-serif;font-weight:800;line-height:1.1;font-size:clamp(24px,7vw,52px);
+  background:linear-gradient(100deg,var(--gold),var(--pink) 50%,var(--purple-soft));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 0 24px rgba(255,150,190,.45));margin-bottom:1vh
+}
+.finale-title span{display:block;font-size:1.05em}
+.crew-row{display:flex;gap:4px;justify-content:center;flex-wrap:wrap;margin:.5vh 0 1.2vh;max-width:540px}
+.crew-item{width:40px;height:46px;position:relative}
+.crew-item.aw{animation:cW 1.3s ease-in-out infinite}
+.crew-item.ab{animation:cB 1s ease-in-out infinite}
+.crew-item.as{animation:cSp 2s ease-in-out infinite}
+@keyframes cW{0%,100%{transform:rotate(-5deg) translateY(0)}50%{transform:rotate(5deg) translateY(-4px)}}
+@keyframes cB{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes cSp{0%,100%{transform:rotate(0)}25%{transform:rotate(6deg)}75%{transform:rotate(-6deg)}}
+
+.cake-area{position:relative;margin-top:.3vh}
+.cake-svg{width:min(240px,54vw);display:block}
+.cake-hint{font-size:clamp(11px,2.8vw,14px);color:var(--sky);margin-top:.8vh;opacity:.9}
+.candle{
+  position:absolute;width:7px;height:24px;border-radius:3px;
+  background:linear-gradient(180deg,#fff5da,var(--gold-deep));
+  cursor:pointer;transform:translateX(-50%)
+}
+.flame{
+  position:absolute;left:50%;bottom:100%;width:10px;height:15px;
+  transform:translateX(-50%) scale(.1);opacity:0;
+  border-radius:50% 50% 50% 50% / 65% 65% 35% 35%;
+  background:radial-gradient(circle at 50% 70%,#fff6c9,var(--gold-deep) 55%,var(--pink-deep));
+  box-shadow:0 0 12px 4px rgba(255,190,90,.7);
+  transition:opacity .4s,transform .4s;animation:fl 1s ease-in-out infinite
+}
+.candle.lit .flame{opacity:1;transform:translateX(-50%) scale(1)}
+.candle.blown .flame{opacity:0!important;transform:translateX(-50%) scale(.05)!important;animation:none}
+@keyframes fl{0%,100%{filter:brightness(1);transform:translateX(-50%) scale(1) rotate(-2deg)}50%{filter:brightness(1.3);transform:translateX(-50%) scale(1.1) rotate(2deg)}}
+.candle-hit{position:absolute;inset:-12px;border-radius:50%}
+
+.msg-card{
+  margin-top:2vh;max-width:540px;width:90vw;
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.2);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-radius:24px;padding:clamp(18px,4vw,30px);
+  box-shadow:0 20px 60px rgba(0,0,0,.4);opacity:0;transform:translateY(20px) scale(.97)
+}
+.msg-card.reveal{animation:cR .9s cubic-bezier(.22,1,.36,1) forwards}
+@keyframes cR{to{opacity:1;transform:translateY(0) scale(1)}}
+.msg-card .ct{font-family:'Baloo 2',sans-serif;font-weight:700;font-size:clamp(17px,4.2vw,22px);color:var(--gold);margin-bottom:10px;text-shadow:0 0 14px rgba(255,200,120,.4)}
+.msg-card .cb{font-size:clamp(13px,3.2vw,15px);line-height:1.7;opacity:.92}
+.msg-card .cc{margin-top:10px;font-weight:700;color:var(--pink-soft)}
+.msg-card .cs2{margin-top:16px;font-family:'Dancing Script',cursive;font-size:clamp(20px,5vw,26px);color:var(--gold)}
+#replay-btn{
+  margin-top:14px;padding:10px 24px;border-radius:999px;font-family:'Baloo 2',sans-serif;
+  font-weight:700;font-size:13px;color:#1a0830;
+  background:linear-gradient(120deg,var(--sky),var(--purple-soft));
+  box-shadow:0 6px 20px rgba(120,150,255,.3)
+}
+#replay-btn:active{transform:scale(.94)}
+.word-row.golden .slot.done{animation:gP 1.6s ease-in-out infinite}
+@keyframes gP{0%,100%{box-shadow:0 0 12px 3px rgba(255,210,140,.5),0 0 30px rgba(255,90,160,.3)}50%{box-shadow:0 0 20px 6px rgba(255,210,140,.8),0 0 50px rgba(255,90,160,.5)}}
+
+/* Character name tag */
+.char-tag{
+  position:absolute;bottom:-2px;left:50%;transform:translateX(-50%);
+  font-family:'Baloo 2',sans-serif;font-size:9px;font-weight:700;
+  color:var(--gold);white-space:nowrap;text-shadow:0 0 6px rgba(0,0,0,.8);
+  letter-spacing:.03em;
+}
+
+@media(prefers-reduced-motion:reduce){*{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}}
+@media(max-height:520px){.big-23{font-size:clamp(70px,20vw,140px)}.action-area{height:clamp(80px,18vh,130px)}}
+</style>
+</head>
+<body>
+<canvas id="bg-canvas"></canvas>
+<canvas id="fx-canvas"></canvas>
+<div id="ambient"></div>
+<button id="sound-btn" aria-label="Toggle music">🔊</button>
+<button id="skip-btn">Skip ⏭</button>
+<div id="start-screen">
+  <p class="start-ey">a magical celebration for</p>
+  <h1 class="start-t">Nikky's 23rd Birthday</h1>
+  <p class="start-s">Turn up the volume, dim the lights, and enjoy the show.</p>
+  <button id="begin-btn">✨ Start the Magic ✨</button>
+</div>
+<main id="stage" hidden>
+  <section class="scene" id="sc-intro">
+    <p class="intro-text" id="intro-txt">Someone truly special is celebrating today...</p>
+    <div style="margin-top:4vh">
+      <div class="big-23" id="big23">23</div>
+      <p class="age-sub" id="age-sub">years of pure magic</p>
+    </div>
+  </section>
+  <section class="scene" id="sc-happy">
+    <p class="scene-label" id="happy-lbl">&nbsp;</p>
+    <div class="word-row" id="row-happy"></div>
+    <div class="word-row" id="row-bday"></div>
+    <div class="action-area" id="area-happy"></div>
+  </section>
+  <section class="scene" id="sc-nikky">
+    <p class="scene-label" id="nikky-lbl">Now, for someone truly amazing...</p>
+    <div class="word-row" id="row-nikky"></div>
+    <div class="action-area" id="area-nikky"></div>
+  </section>
+  <section class="scene" id="sc-finale">
+    <h2 class="finale-title">HAPPY BIRTHDAY<span>NIKKY ✨</span></h2>
+    <div class="crew-row" id="crew-row"></div>
+    <div class="cake-area">
+      <div id="cake-box"></div>
+      <p class="cake-hint" id="cake-hint">Tap each candle to make a wish ✨</p>
+    </div>
+    <div class="msg-card" id="msg-card">
+      <p class="ct">Happy 23rd Birthday Nikky ❤️</p>
+      <p class="cb">May your smile always shine brighter than the stars. May every dream become reality. May happiness, success, love and laughter follow you forever.</p>
+      <p class="cb cc">You are special. You are loved. You are unforgettable.<br>Happy Birthday Nikky.</p>
+      <p class="cs2">Made Especially For Nikky ❤️</p>
+      <button id="replay-btn">Replay ↺</button>
+    </div>
+  </section>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script>
+(function(){
+"use strict";
+var DPR=Math.min(devicePixelRatio||1,2),W=0,H=0;
+var bgC=document.getElementById('bg-canvas'),bgX=bgC.getContext('2d');
+var fxC=document.getElementById('fx-canvas'),fxX=fxC.getContext('2d');
+var cancelled=false,timers=[];
+function delay(ms){return new Promise(function(ok,no){var id=setTimeout(function(){timers=timers.filter(function(t){return t!==id});cancelled?no('skip'):ok()},ms);timers.push(id)})}
+function clearTimers(){timers.forEach(clearTimeout);timers=[];}
+function resize(){W=innerWidth;H=innerHeight;[bgC,fxC].forEach(function(c){c.width=W*DPR;c.height=H*DPR;c.style.width=W+'px';c.style.height=H+'px';c.getContext('2d').setTransform(DPR,0,0,DPR,0,0)})}
+addEventListener('resize',resize);resize();
+
+/* ═══ STARS ═══ */
+var stars=[],starN=60;
+function mkS(){return{x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.4+.4,a:Math.random()*.4+.3,p:Math.random()*6.28,s:Math.random()*.3+.15}}
+function drawStars(){while(stars.length<starN)stars.push(mkS());stars.forEach(function(s){s.p+=.018;var a=s.a+Math.sin(s.p)*.35;bgX.beginPath();bgX.fillStyle='rgba(255,250,235,'+Math.max(0,a).toFixed(3)+')';bgX.shadowColor='rgba(255,230,170,.7)';bgX.shadowBlur=s.r*3;bgX.arc(s.x,s.y,s.r,0,6.28);bgX.fill()});bgX.shadowBlur=0}
+var blobs=[{x:.15,y:.2,r:280,c:'rgba(168,85,247,.14)'},{x:.85,y:.75,r:320,c:'rgba(255,107,157,.12)'},{x:.5,y:.95,r:260,c:'rgba(56,189,248,.09)'}];
+function drawBlobs(){blobs.forEach(function(b){var g=bgX.createRadialGradient(b.x*W,b.y*H,0,b.x*W,b.y*H,b.r);g.addColorStop(0,b.c);g.addColorStop(1,'rgba(0,0,0,0)');bgX.fillStyle=g;bgX.fillRect(0,0,W,H)})}
+
+/* ═══ PARTICLES ═══ */
+var parts=[];
+var pCols=['#ff6b9d','#fbbf24','#a855f7','#38bdf8','#ff3366','#fff9f0'];
+function addConfetti(n,oy){for(var i=0;i<n;i++)parts.push({t:'c',x:Math.random()*W,y:(oy!=null?oy:-20)-Math.random()*60,vx:(Math.random()-.5)*2.4,vy:Math.random()*1.8+2,rot:Math.random()*6.28,vr:(Math.random()-.5)*.3,sz:Math.random()*6+5,col:pCols[Math.random()*pCols.length|0],life:0,max:260+Math.random()*120})}
+function addFirework(x,y){var col=pCols[Math.random()*pCols.length|0];for(var i=0;i<50;i++){var a=6.28*i/50+Math.random()*.1,sp=Math.random()*3.6+1.8;parts.push({t:'s',x:x,y:y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,sz:Math.random()*2+1.5,col:col,life:0,max:65+Math.random()*30,g:.035})}}
+function addSparkle(x,y,n){for(var i=0;i<(n||14);i++){var a=Math.random()*6.28,sp=Math.random()*1.6+.4;parts.push({t:'g',x:x,y:y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp-.4,sz:Math.random()*2.5+1.2,col:['#fbbf24','#fff9f0','#ff6b9d'][Math.random()*3|0],life:0,max:50+Math.random()*30,g:.012})}}
+function fireworkShow(dur){var e=0,iv=setInterval(function(){addFirework(W*(.12+Math.random()*.76),H*(.12+Math.random()*.38));e+=260;if(e>=dur)clearInterval(iv)},260)}
+function drawParts(){fxX.clearRect(0,0,W,H);parts=parts.filter(function(p){return p.life<p.max});parts.forEach(function(p){p.life++;var a=1-p.life/p.max;if(p.t==='c'){p.x+=p.vx;p.y+=p.vy;p.rot+=p.vr;if(p.y>H+20)p.life=p.max;fxX.save();fxX.translate(p.x,p.y);fxX.rotate(p.rot);fxX.fillStyle=p.col;fxX.globalAlpha=a;fxX.fillRect(-p.sz/2,-p.sz/3,p.sz,p.sz*.65);fxX.restore()}else{if(p.g)p.vy+=p.g;p.x+=p.vx;p.y+=p.vy;if(p.t==='s'){p.vx*=.985;p.vy*=.985}fxX.beginPath();fxX.fillStyle=p.col;fxX.globalAlpha=Math.max(0,a);fxX.shadowColor=p.col;fxX.shadowBlur=p.t==='s'?8:10;fxX.arc(p.x,p.y,p.sz,0,6.28);fxX.fill()}});fxX.globalAlpha=1;fxX.shadowBlur=0}
+
+var running=true;
+function frame(){bgX.clearRect(0,0,W,H);drawBlobs();drawStars();drawParts();if(running)requestAnimationFrame(frame)}
+document.addEventListener('visibilitychange',function(){running=!document.hidden;if(running)requestAnimationFrame(frame)});
+requestAnimationFrame(frame);
+
+/* ═══ AMBIENT DOM ═══ */
+var amb=document.getElementById('ambient');
+var bCols=[['#ff6b9d','#e8366d'],['#a855f7','#7c3aed'],['#fbbf24','#f59e0b'],['#38bdf8','#0ea5e9'],['#ff3366','#cc1144']];
+var ambIvs=[];
+function spawnBl(){var d=document.createElement('div');d.className='bl';var c=bCols[Math.random()*bCols.length|0];d.style.background='radial-gradient(circle at 32% 28%,rgba(255,255,255,.5),transparent 42%),linear-gradient(160deg,'+c[0]+','+c[1]+')';d.style.left=(Math.random()*92+3)+'vw';d.style.animationDuration=(12+Math.random()*8)+'s,'+(2.4+Math.random()*1.4)+'s';d.addEventListener('animationend',function(e){if(e.animationName==='bF')d.remove()});amb.appendChild(d)}
+function spawnH(){var h=document.createElement('div');h.className='fh';h.textContent=['❤️','💕','💖','💗','🩷'][Math.random()*5|0];h.style.left=(Math.random()*94+2)+'vw';h.style.animationDuration=(7+Math.random()*5)+'s';h.addEventListener('animationend',function(){h.remove()});amb.appendChild(h)}
+function spawnR(){var r=document.createElement('div');r.className='rp';r.style.left=(Math.random()*96+1)+'vw';r.style.background=['#ff6b9d','#e8366d','#ff8fb3','#d4365a'][Math.random()*4|0];r.style.animationDuration=(5+Math.random()*4)+'s';r.addEventListener('animationend',function(){r.remove()});amb.appendChild(r)}
+function startAmb(){ambIvs.push(setInterval(spawnBl,2400));ambIvs.push(setInterval(spawnH,1300));spawnBl();spawnBl()}
+function startRoses(){ambIvs.push(setInterval(spawnR,300))}
+
+/* ═══ AUDIO ═══ */
+var actx,mGain,muted=false,intensity='soft';
+var notes=[[0,0,1],[4,1,1],[7,2,1],[12,3,1],[11,4,1],[9,5,1],[7,6,1],[4,7,1],[0,8,1],[4,9,1],[9,10,1],[12,11,1],[11,12,2],[7,14,2]];
+var pad=[0,4,7,12];var BT=.42,LOOP=16;
+function freq(s){return 261.63*Math.pow(2,s/12)}
+function pN(f,t,d,tp,v){var o=actx.createOscillator();o.type=tp||'triangle';o.frequency.value=f;var g=actx.createGain();g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(v||.14,t+.04);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g);g.connect(mGain);o.start(t);o.stop(t+d+.05)}
+var nextLoop=0;
+function schedLoop(){if(!actx)return;var st=Math.max(nextLoop,actx.currentTime+.05);notes.forEach(function(n){var t=st+n[1]*BT;pN(freq(n[0]+12),t,n[2]*BT*.9,'triangle',.12);if(intensity==='full'){pN(freq(n[0]),t,n[2]*BT*.9,'sine',.06)}});if(intensity==='full'){pad.forEach(function(s){pN(freq(s-12),st,LOOP*BT*.98,'sine',.03)});pN(freq(24),st,LOOP*BT*.5,'sine',.025)}nextLoop=st+LOOP*BT;setTimeout(schedLoop,Math.max(50,(nextLoop-actx.currentTime-.6)*1e3))}
+function initAudio(){if(actx)return;try{actx=new(window.AudioContext||window.webkitAudioContext)();mGain=actx.createGain();mGain.gain.value=.5;mGain.connect(actx.destination);schedLoop()}catch(e){}}
+function setIntensity(lv){intensity=lv;if(mGain)gsap.to(mGain.gain,{value:lv==='full'?.65:.5,duration:1})}
+function toggleMute(){muted=!muted;if(actx&&actx.state==='suspended')actx.resume();if(mGain)gsap.to(mGain.gain,{value:muted?0:(intensity==='full'?.65:.5),duration:.35});document.getElementById('sound-btn').textContent=muted?'🔇':'🔊'}
+function chime(f){if(!actx||muted)return;pN(f,actx.currentTime+.01,.5,'sine',.1)}
+
+/* ═══════════════════════════════════════════════════════
+   CHARACTER SVG FACTORY — Highly detailed original mascots
+   Each designed to be instantly recognizable via:
+   body proportion, color, outfit, accessories, facial features
+   ═══════════════════════════════════════════════════════ */
+
+function charSVG(name){
+  var s='<svg viewBox="0 0 120 150" xmlns="http://www.w3.org/2000/svg">';
+  // ground shadow
+  s+='<ellipse cx="60" cy="142" rx="32" ry="5" fill="rgba(0,0,0,.15)"/>';
+
+  switch(name){
+
+  case 'motu':
+    // Very round/heavy body, red vest, dark warm skin, big belly
+    s+='<ellipse cx="60" cy="88" rx="42" ry="46" fill="#d4874e"/>';// big round body
+    s+='<ellipse cx="60" cy="94" rx="34" ry="30" fill="#c0392b"/>';// red vest
+    s+='<ellipse cx="60" cy="100" rx="28" ry="22" fill="#d4874e" opacity=".6"/>';// belly showing
+    // head
+    s+='<circle cx="60" cy="40" r="28" fill="#d4874e"/>';
+    // eyes
+    s+='<ellipse cx="50" cy="38" rx="7" ry="8" fill="#fff"/><circle cx="52" cy="39" r="3.5" fill="#1a0830"/><circle cx="53.5" cy="37" r="1.2" fill="#fff"/>';
+    s+='<ellipse cx="70" cy="38" rx="7" ry="8" fill="#fff"/><circle cx="72" cy="39" r="3.5" fill="#1a0830"/><circle cx="73.5" cy="37" r="1.2" fill="#fff"/>';
+    // thick eyebrows
+    s+='<rect x="43" y="28" width="16" height="4" rx="2" fill="#2c1810"/>';
+    s+='<rect x="63" y="28" width="16" height="4" rx="2" fill="#2c1810"/>';
+    // big grin
+    s+='<path d="M46 50 Q60 62 74 50" stroke="#1a0830" stroke-width="2.5" fill="none" stroke-linecap="round"/>';
+    // arms (stubby)
+    s+='<ellipse cx="22" cy="86" rx="10" ry="14" fill="#d4874e" transform="rotate(-15 22 86)"/>';
+    s+='<ellipse cx="98" cy="86" rx="10" ry="14" fill="#d4874e" transform="rotate(15 98 86)"/>';
+    // legs
+    s+='<rect x="38" y="126" width="16" height="16" rx="8" fill="#d4874e"/>';
+    s+='<rect x="66" y="126" width="16" height="16" rx="8" fill="#d4874e"/>';
+    // cheeks
+    s+='<ellipse cx="40" cy="48" rx="6" ry="4" fill="#e8a070" opacity=".5"/>';
+    s+='<ellipse cx="80" cy="48" rx="6" ry="4" fill="#e8a070" opacity=".5"/>';
+    break;
+
+  case 'patlu':
+    // Tall and thin, pointy cap, lighter skin, smart look
+    s+='<rect x="44" y="60" width="32" height="74" rx="14" fill="#5dade2"/>';// blue shirt tall
+    // head
+    s+='<ellipse cx="60" cy="42" rx="22" ry="24" fill="#f5d6a8"/>';
+    // pointy cap/topi
+    s+='<path d="M38 30 Q60 -6 82 30 L78 34 Q60 4 42 34Z" fill="#e67e22"/>';
+    s+='<rect x="36" y="30" width="48" height="6" rx="3" fill="#d35400"/>';
+    // glasses (big round)
+    s+='<circle cx="50" cy="42" r="10" fill="none" stroke="#1a0830" stroke-width="2.5"/>';
+    s+='<circle cx="70" cy="42" r="10" fill="none" stroke="#1a0830" stroke-width="2.5"/>';
+    s+='<line x1="60" y1="42" x2="60" y2="42" stroke="#1a0830" stroke-width="2.5"/>';
+    s+='<line x1="40" y1="42" x2="36" y2="38" stroke="#1a0830" stroke-width="2"/>';
+    s+='<line x1="80" y1="42" x2="84" y2="38" stroke="#1a0830" stroke-width="2"/>';
+    // eyes behind glasses
+    s+='<circle cx="50" cy="43" r="3" fill="#1a0830"/><circle cx="51.5" cy="41" r="1" fill="#fff"/>';
+    s+='<circle cx="70" cy="43" r="3" fill="#1a0830"/><circle cx="71.5" cy="41" r="1" fill="#fff"/>';
+    // smile
+    s+='<path d="M52 56 Q60 62 68 56" stroke="#1a0830" stroke-width="2" fill="none" stroke-linecap="round"/>';
+    // thin arms
+    s+='<line x1="44" y1="72" x2="28" y2="90" stroke="#f5d6a8" stroke-width="7" stroke-linecap="round"/>';
+    s+='<line x1="76" y1="72" x2="92" y2="90" stroke="#f5d6a8" stroke-width="7" stroke-linecap="round"/>';
+    // legs
+    s+='<rect x="46" y="130" width="11" height="14" rx="5" fill="#f5d6a8"/>';
+    s+='<rect x="63" y="130" width="11" height="14" rx="5" fill="#f5d6a8"/>';
+    break;
+
+  case 'bheem':
+    // Strong kid, crown, blue dhoti, muscular tiny body
+    s+='<ellipse cx="60" cy="90" rx="30" ry="38" fill="#f5d6a8"/>';// body
+    s+='<rect x="36" y="80" width="48" height="46" rx="12" fill="#3498db"/>';// blue outfit
+    s+='<rect x="36" y="78" width="48" height="8" fill="#e67e22"/>';// orange belt
+    // head
+    s+='<circle cx="60" cy="40" r="26" fill="#f5d6a8"/>';
+    // crown/tiara
+    s+='<path d="M38 22 L44 10 L50 20 L56 6 L62 20 L68 8 L74 20 L80 12 L82 22Z" fill="#fbbf24" stroke="#f59e0b" stroke-width="1"/>';
+    // eyes
+    s+='<ellipse cx="50" cy="40" rx="6" ry="7" fill="#fff"/><circle cx="52" cy="41" r="3.2" fill="#1a0830"/><circle cx="53" cy="39.5" r="1.1" fill="#fff"/>';
+    s+='<ellipse cx="70" cy="40" rx="6" ry="7" fill="#fff"/><circle cx="72" cy="41" r="3.2" fill="#1a0830"/><circle cx="73" cy="39.5" r="1.1" fill="#fff"/>';
+    // confident smile
+    s+='<path d="M48 52 Q60 60 72 52" stroke="#1a0830" stroke-width="2.5" fill="none" stroke-linecap="round"/>';
+    // strong arms
+    s+='<ellipse cx="24" cy="88" rx="11" ry="14" fill="#f5d6a8" transform="rotate(-10 24 88)"/>';
+    s+='<ellipse cx="96" cy="88" rx="11" ry="14" fill="#f5d6a8" transform="rotate(10 96 88)"/>';
+    // fists
+    s+='<circle cx="20" cy="100" r="7" fill="#f5d6a8"/>';
+    s+='<circle cx="100" cy="100" r="7" fill="#f5d6a8"/>';
+    // legs
+    s+='<rect x="40" y="122" width="14" height="18" rx="7" fill="#f5d6a8"/>';
+    s+='<rect x="66" y="122" width="14" height="18" rx="7" fill="#f5d6a8"/>';
+    // cheeks
+    s+='<ellipse cx="40" cy="48" rx="5" ry="3.5" fill="#ffb3b3" opacity=".5"/>';
+    s+='<ellipse cx="80" cy="48" rx="5" ry="3.5" fill="#ffb3b3" opacity=".5"/>';
+    break;
+
+  case 'singham':
+    // Small heroic kid in police blue uniform, police cap, badge
+    s+='<rect x="40" y="60" width="40" height="62" rx="14" fill="#1a3a7a"/>';// dark blue uniform
+    s+='<rect x="40" y="60" width="40" height="10" fill="#1a3a7a" rx="4"/>';// collar
+    // police buttons
+    s+='<circle cx="60" cy="78" r="2" fill="#fbbf24"/>';
+    s+='<circle cx="60" cy="88" r="2" fill="#fbbf24"/>';
+    s+='<circle cx="60" cy="98" r="2" fill="#fbbf24"/>';
+    // badge
+    s+='<polygon points="54,70 56,66 60,64 64,66 66,70 64,74 60,76 56,74" fill="#fbbf24"/>';
+    s+='<polygon points="60,66 61,69 64,69 62,71 63,74 60,72 57,74 58,71 56,69 59,69" fill="#fff" opacity=".9"/>';
+    // head
+    s+='<circle cx="60" cy="38" r="22" fill="#c68642"/>';
+    // police cap
+    s+='<rect x="36" y="20" width="48" height="14" rx="6" fill="#1a3a7a"/>';
+    s+='<rect x="42" y="14" width="36" height="10" rx="4" fill="#1a3a7a"/>';
+    s+='<ellipse cx="60" cy="20" rx="6" ry="4" fill="#fbbf24"/>';// cap badge
+    s+='<rect x="36" y="32" width="48" height="3" fill="#1a3a7a"/>';// visor
+    // eyes (determined)
+    s+='<ellipse cx="52" cy="38" rx="5" ry="6" fill="#fff"/><circle cx="53" cy="39" r="2.8" fill="#1a0830"/><circle cx="54" cy="37.5" r="1" fill="#fff"/>';
+    s+='<ellipse cx="68" cy="38" rx="5" ry="6" fill="#fff"/><circle cx="69" cy="39" r="2.8" fill="#1a0830"/><circle cx="70" cy="37.5" r="1" fill="#fff"/>';
+    // determined brows
+    s+='<line x1="47" y1="30" x2="57" y2="32" stroke="#2c1810" stroke-width="2.5" stroke-linecap="round"/>';
+    s+='<line x1="73" y1="30" x2="63" y2="32" stroke="#2c1810" stroke-width="2.5" stroke-linecap="round"/>';
+    // smile
+    s+='<path d="M52 48 Q60 54 68 48" stroke="#1a0830" stroke-width="2" fill="none" stroke-linecap="round"/>';
+    // arms
+    s+='<line x1="40" y1="72" x2="26" y2="88" stroke="#c68642" stroke-width="7" stroke-linecap="round"/>';
+    s+='<line x1="80" y1="72" x2="94" y2="88" stroke="#c68642" stroke-width="7" stroke-linecap="round"/>';
+    // legs
+    s+='<rect x="44" y="118" width="12" height="18" rx="6" fill="#c68642"/>';
+    s+='<rect x="64" y="118" width="12" height="18" rx="6" fill="#c68642"/>';
+    // shoes
+    s+='<rect x="42" y="132" width="16" height="8" rx="4" fill="#1a0830"/>';
+    s+='<rect x="62" y="132" width="16" height="8" rx="4" fill="#1a0830"/>';
+    break;
+
+  case 'bean':
+    // Thin, brown/olive jacket, red bow tie, distinctive face
+    s+='<rect x="42" y="56" width="36" height="68" rx="12" fill="#6b5b3a"/>';// brown jacket
+    s+='<rect x="46" y="56" width="28" height="26" rx="4" fill="#f5f0e0"/>';// white shirt under
+    s+='<polygon points="58,58 62,58 64,68 60,72 56,68" fill="#c0392b"/>';// red tie
+    // head (oval, large)
+    s+='<ellipse cx="60" cy="36" rx="22" ry="26" fill="#f0d5a0"/>';
+    // funny hair on top
+    s+='<path d="M48 12 Q52 6 56 14 Q60 8 64 14 Q68 6 72 12" stroke="#5a3e20" stroke-width="3" fill="none" stroke-linecap="round"/>';
+    // eyes (small, beady)
+    s+='<circle cx="52" cy="34" r="4" fill="#fff"/><circle cx="53" cy="35" r="2.2" fill="#1a0830"/>';
+    s+='<circle cx="68" cy="34" r="4" fill="#fff"/><circle cx="69" cy="35" r="2.2" fill="#1a0830"/>';
+    // raised eyebrows
+    s+='<path d="M46 26 Q52 22 56 26" stroke="#5a3e20" stroke-width="2.5" fill="none"/>';
+    s+='<path d="M64 26 Q68 22 74 26" stroke="#5a3e20" stroke-width="2.5" fill="none"/>';
+    // confused/funny half-smile
+    s+='<path d="M50 46 Q58 52 66 44" stroke="#1a0830" stroke-width="2" fill="none" stroke-linecap="round"/>';
+    // thin arms
+    s+='<line x1="42" y1="68" x2="26" y2="86" stroke="#f0d5a0" stroke-width="6" stroke-linecap="round"/>';
+    s+='<line x1="78" y1="68" x2="94" y2="86" stroke="#f0d5a0" stroke-width="6" stroke-linecap="round"/>';
+    // legs
+    s+='<rect x="46" y="120" width="11" height="18" rx="5" fill="#2c3e50"/>';
+    s+='<rect x="63" y="120" width="11" height="18" rx="5" fill="#2c3e50"/>';
+    break;
+
+  case 'tom':
+    // Grey/blue cat, pointy ears, whiskers, sly expression
+    s+='<ellipse cx="60" cy="90" rx="28" ry="38" fill="#8e99b0"/>';// grey body
+    s+='<ellipse cx="60" cy="96" rx="22" ry="20" fill="#c8d0e0"/>';// white belly
+    // head
+    s+='<ellipse cx="60" cy="40" rx="24" ry="22" fill="#8e99b0"/>';
+    // pointy cat ears
+    s+='<polygon points="36,26 44,8 50,30" fill="#8e99b0"/>';
+    s+='<polygon points="40,24 44,12 48,28" fill="#d4a0a0" opacity=".5"/>';
+    s+='<polygon points="84,26 76,8 70,30" fill="#8e99b0"/>';
+    s+='<polygon points="80,24 76,12 72,28" fill="#d4a0a0" opacity=".5"/>';
+    // white muzzle
+    s+='<ellipse cx="60" cy="48" rx="14" ry="10" fill="#e8e8f0"/>';
+    // cat eyes (sly)
+    s+='<ellipse cx="48" cy="38" rx="7" ry="6" fill="#e8f080"/>';
+    s+='<ellipse cx="48" cy="38" rx="2.5" ry="5" fill="#1a0830"/>';// slit pupil
+    s+='<ellipse cx="72" cy="38" rx="7" ry="6" fill="#e8f080"/>';
+    s+='<ellipse cx="72" cy="38" rx="2.5" ry="5" fill="#1a0830"/>';
+    // nose
+    s+='<ellipse cx="60" cy="46" rx="3" ry="2" fill="#d06080"/>';
+    // whiskers
+    s+='<line x1="34" y1="44" x2="48" y2="46" stroke="#555" stroke-width="1.2"/>';
+    s+='<line x1="34" y1="50" x2="48" y2="50" stroke="#555" stroke-width="1.2"/>';
+    s+='<line x1="72" y1="46" x2="86" y2="44" stroke="#555" stroke-width="1.2"/>';
+    s+='<line x1="72" y1="50" x2="86" y2="50" stroke="#555" stroke-width="1.2"/>';
+    // sly smile
+    s+='<path d="M52 52 Q60 58 68 52" stroke="#1a0830" stroke-width="1.8" fill="none" stroke-linecap="round"/>';
+    // tail
+    s+='<path d="M86 100 Q108 90 104 116 Q100 128 94 124" stroke="#8e99b0" stroke-width="6" fill="none" stroke-linecap="round"/>';
+    // arms
+    s+='<line x1="34" y1="80" x2="22" y2="96" stroke="#8e99b0" stroke-width="7" stroke-linecap="round"/>';
+    s+='<line x1="86" y1="80" x2="98" y2="96" stroke="#8e99b0" stroke-width="7" stroke-linecap="round"/>';
+    // legs
+    s+='<rect x="42" y="122" width="12" height="16" rx="6" fill="#8e99b0"/>';
+    s+='<rect x="66" y="122" width="12" height="16" rx="6" fill="#8e99b0"/>';
+    break;
+
+  case 'jerry':
+    // Small brown mouse, big round ears, tiny body, cheeky grin
+    s+='<ellipse cx="60" cy="98" rx="18" ry="22" fill="#d4a06a"/>';// small body
+    s+='<ellipse cx="60" cy="102" rx="14" ry="14" fill="#f0d8b0"/>';// light belly
+    // head (round)
+    s+='<circle cx="60" cy="58" r="20" fill="#d4a06a"/>';
+    // big round ears
+    s+='<circle cx="36" cy="44" r="14" fill="#d4a06a"/>';
+    s+='<circle cx="36" cy="44" r="8" fill="#e8a880" opacity=".6"/>';
+    s+='<circle cx="84" cy="44" r="14" fill="#d4a06a"/>';
+    s+='<circle cx="84" cy="44" r="8" fill="#e8a880" opacity=".6"/>';
+    // big eyes (cute)
+    s+='<ellipse cx="52" cy="56" rx="6" ry="7" fill="#fff"/><circle cx="54" cy="57" r="3" fill="#1a0830"/><circle cx="55" cy="55.5" r="1.2" fill="#fff"/>';
+    s+='<ellipse cx="68" cy="56" rx="6" ry="7" fill="#fff"/><circle cx="70" cy="57" r="3" fill="#1a0830"/><circle cx="71" cy="55.5" r="1.2" fill="#fff"/>';
+    // nose
+    s+='<ellipse cx="60" cy="64" rx="3" ry="2.5" fill="#1a0830"/>';
+    // cheeky grin
+    s+='<path d="M52 70 Q60 78 68 70" stroke="#1a0830" stroke-width="2" fill="none" stroke-linecap="round"/>';
+    // whiskers
+    s+='<line x1="38" y1="64" x2="50" y2="66" stroke="#888" stroke-width="1"/>';
+    s+='<line x1="70" y1="66" x2="82" y2="64" stroke="#888" stroke-width="1"/>';
+    // tiny arms
+    s+='<line x1="44" y1="92" x2="34" y2="102" stroke="#d4a06a" stroke-width="5" stroke-linecap="round"/>';
+    s+='<line x1="76" y1="92" x2="86" y2="102" stroke="#d4a06a" stroke-width="5" stroke-linecap="round"/>';
+    // tail
+    s+='<path d="M76 108 Q96 104 92 120 Q88 130 84 128" stroke="#d4a06a" stroke-width="3" fill="none" stroke-linecap="round"/>';
+    // feet
+    s+='<ellipse cx="50" cy="118" rx="7" ry="4" fill="#d4a06a"/>';
+    s+='<ellipse cx="70" cy="118" rx="7" ry="4" fill="#d4a06a"/>';
+    break;
+
+  case 'dora':
+    // Girl explorer, bob haircut, pink/purple outfit, backpack, boots
+    s+='<rect x="40" y="56" width="40" height="58" rx="14" fill="#e056a0"/>';// pink top
+    s+='<rect x="42" y="100" width="36" height="26" rx="8" fill="#f59e0b"/>';// orange shorts
+    // head
+    s+='<circle cx="60" cy="36" r="24" fill="#f0c890"/>';
+    // bob hair
+    s+='<path d="M36 30 Q36 8 60 8 Q84 8 84 30 L86 44 Q86 50 80 48 L76 36 L44 36 L40 48 Q34 50 34 44Z" fill="#3a1a0a"/>';
+    s+='<path d="M40 24 Q40 14 60 14 Q80 14 80 24" fill="#3a1a0a"/>';// hair top
+    // bangs
+    s+='<path d="M40 28 Q50 22 56 30 Q62 22 72 28 Q78 22 82 28" fill="#3a1a0a"/>';
+    // eyes
+    s+='<ellipse cx="50" cy="38" rx="6" ry="7" fill="#fff"/><circle cx="52" cy="39" r="3" fill="#4a2800"/><circle cx="53" cy="37.5" r="1.1" fill="#fff"/>';
+    s+='<ellipse cx="70" cy="38" rx="6" ry="7" fill="#fff"/><circle cx="72" cy="39" r="3" fill="#4a2800"/><circle cx="73" cy="37.5" r="1.1" fill="#fff"/>';
+    // cute smile
+    s+='<path d="M52 48 Q60 56 68 48" stroke="#1a0830" stroke-width="2" fill="none" stroke-linecap="round"/>';
+    // cheeks
+    s+='<ellipse cx="42" cy="46" rx="4" ry="3" fill="#ff8fb3" opacity=".5"/>';
+    s+='<ellipse cx="78" cy="46" rx="4" ry="3" fill="#ff8fb3" opacity=".5"/>';
+    // backpack
+    s+='<rect x="78" y="56" width="18" height="26" rx="8" fill="#7c3aed"/>';
+    s+='<rect x="82" y="62" width="10" height="8" rx="3" fill="#a855f7" opacity=".6"/>';
+    // arms
+    s+='<line x1="40" y1="68" x2="26" y2="84" stroke="#f0c890" stroke-width="7" stroke-linecap="round"/>';
+    s+='<line x1="80" y1="68" x2="94" y2="84" stroke="#f0c890" stroke-width="7" stroke-linecap="round"/>';
+    // boots
+    s+='<rect x="42" y="122" width="14" height="16" rx="5" fill="#e056a0"/>';
+    s+='<rect x="64" y="122" width="14" height="16" rx="5" fill="#e056a0"/>';
+    break;
+
+  case 'doraemon':
+    // Round blue robot, white belly circle, red nose, bell, no ears
+    s+='<ellipse cx="60" cy="88" rx="34" ry="40" fill="#2196F3"/>';// round blue body
+    s+='<ellipse cx="60" cy="94" rx="26" ry="28" fill="#fff"/>';// white belly
+    // pocket
+    s+='<path d="M44 86 Q44 104 60 104 Q76 104 76 86" fill="none" stroke="#1a0830" stroke-width="1.5"/>';
+    s+='<line x1="44" y1="86" x2="76" y2="86" stroke="#1a0830" stroke-width="1.5"/>';
+    // head (round, big)
+    s+='<circle cx="60" cy="38" r="28" fill="#2196F3"/>';
+    // white face area
+    s+='<ellipse cx="60" cy="44" rx="22" ry="18" fill="#fff"/>';
+    // NO ears (signature trait)
+    // eyes (close together, oval)
+    s+='<ellipse cx="52" cy="32" rx="8" ry="10" fill="#fff" stroke="#1a0830" stroke-width="1"/>';
+    s+='<ellipse cx="68" cy="32" rx="8" ry="10" fill="#fff" stroke="#1a0830" stroke-width="1"/>';
+    s+='<circle cx="55" cy="34" r="3.5" fill="#1a0830"/><circle cx="56.5" cy="32" r="1.2" fill="#fff"/>';
+    s+='<circle cx="65" cy="34" r="3.5" fill="#1a0830"/><circle cx="66.5" cy="32" r="1.2" fill="#fff"/>';
+    // red nose (big round)
+    s+='<circle cx="60" cy="42" r="5" fill="#e53935"/>';
+    s+='<circle cx="58" cy="40" r="1.5" fill="#ff8a80" opacity=".6"/>';
+    // line from nose down
+    s+='<line x1="60" y1="47" x2="60" y2="54" stroke="#1a0830" stroke-width="1.5"/>';
+    // smile
+    s+='<path d="M44 50 Q52 58 60 54 Q68 58 76 50" stroke="#1a0830" stroke-width="1.8" fill="none"/>';
+    // whiskers
+    s+='<line x1="26" y1="38" x2="42" y2="42" stroke="#1a0830" stroke-width="1.2"/>';
+    s+='<line x1="26" y1="46" x2="42" y2="48" stroke="#1a0830" stroke-width="1.2"/>';
+    s+='<line x1="26" y1="54" x2="42" y2="52" stroke="#1a0830" stroke-width="1.2"/>';
+    s+='<line x1="94" y1="38" x2="78" y2="42" stroke="#1a0830" stroke-width="1.2"/>';
+    s+='<line x1="94" y1="46" x2="78" y2="48" stroke="#1a0830" stroke-width="1.2"/>';
+    s+='<line x1="94" y1="54" x2="78" y2="52" stroke="#1a0830" stroke-width="1.2"/>';
+    // bell collar
+    s+='<rect x="38" y="62" width="44" height="6" rx="3" fill="#e53935"/>';
+    s+='<circle cx="60" cy="72" r="6" fill="#fbbf24"/>';
+    s+='<line x1="60" y1="72" x2="60" y2="78" stroke="#b5651d" stroke-width="1.5"/>';
+    // round hands
+    s+='<circle cx="24" cy="96" r="8" fill="#fff"/>';
+    s+='<circle cx="96" cy="96" r="8" fill="#fff"/>';
+    // arms
+    s+='<line x1="30" y1="88" x2="28" y2="78" stroke="#2196F3" stroke-width="8" stroke-linecap="round"/>';
+    s+='<line x1="90" y1="88" x2="92" y2="78" stroke="#2196F3" stroke-width="8" stroke-linecap="round"/>';
+    // legs/feet (short)
+    s+='<rect x="40" y="124" width="14" height="14" rx="7" fill="#fff"/>';
+    s+='<rect x="66" y="124" width="14" height="14" rx="7" fill="#fff"/>';
+    break;
+
+  case 'nobita':
+    // Thin kid, big round glasses, yellow shirt, nervous expression
+    s+='<rect x="42" y="58" width="36" height="62" rx="12" fill="#f1c40f"/>';// yellow shirt
+    s+='<rect x="44" y="106" width="32" height="24" rx="6" fill="#2980b9"/>';// blue shorts
+    // head
+    s+='<circle cx="60" cy="38" r="22" fill="#f5d6a8"/>';
+    // messy hair
+    s+='<path d="M38 28 Q38 10 60 10 Q82 10 82 28" fill="#1a0830"/>';
+    s+='<path d="M42 22 Q46 16 50 24 Q56 14 62 22 Q66 16 72 24 Q76 18 78 24" fill="#1a0830"/>';
+    // BIG round glasses (signature)
+    s+='<circle cx="48" cy="40" r="11" fill="none" stroke="#1a0830" stroke-width="2.8"/>';
+    s+='<circle cx="72" cy="40" r="11" fill="none" stroke="#1a0830" stroke-width="2.8"/>';
+    s+='<line x1="59" y1="40" x2="61" y2="40" stroke="#1a0830" stroke-width="2.8"/>';
+    s+='<line x1="37" y1="38" x2="34" y2="34" stroke="#1a0830" stroke-width="2"/>';
+    s+='<line x1="83" y1="38" x2="86" y2="34" stroke="#1a0830" stroke-width="2"/>';
+    // eyes (small, behind glasses)
+    s+='<circle cx="48" cy="41" r="2.5" fill="#1a0830"/><circle cx="49.5" cy="39.5" r=".9" fill="#fff"/>';
+    s+='<circle cx="72" cy="41" r="2.5" fill="#1a0830"/><circle cx="73.5" cy="39.5" r=".9" fill="#fff"/>';
+    // worried brows
+    s+='<path d="M40 30 Q48 26 54 30" stroke="#1a0830" stroke-width="2" fill="none"/>';
+    s+='<path d="M66 30 Q72 26 80 30" stroke="#1a0830" stroke-width="2" fill="none"/>';
+    // nervous smile
+    s+='<path d="M52 52 Q60 56 68 52" stroke="#1a0830" stroke-width="1.8" fill="none" stroke-linecap="round"/>';
+    // thin arms
+    s+='<line x1="42" y1="70" x2="28" y2="88" stroke="#f5d6a8" stroke-width="6" stroke-linecap="round"/>';
+    s+='<line x1="78" y1="70" x2="92" y2="88" stroke="#f5d6a8" stroke-width="6" stroke-linecap="round"/>';
+    // legs
+    s+='<rect x="46" y="126" width="11" height="14" rx="5" fill="#f5d6a8"/>';
+    s+='<rect x="63" y="126" width="11" height="14" rx="5" fill="#f5d6a8"/>';
+    break;
+
+  case 'shinchan':
+    // Small kid, giant thick eyebrows, red shirt, mischievous
+    s+='<rect x="40" y="58" width="40" height="54" rx="14" fill="#e74c3c"/>';// red top
+    s+='<rect x="42" y="100" width="36" height="22" rx="6" fill="#f1c40f"/>';// yellow shorts
+    // head (round)
+    s+='<circle cx="60" cy="36" r="24" fill="#f5d6a8"/>';
+    // signature THICK eyebrows (very thick, caterpillar-like)
+    s+='<ellipse cx="46" cy="28" rx="12" ry="5" fill="#1a0830"/>';
+    s+='<ellipse cx="74" cy="28" rx="12" ry="5" fill="#1a0830"/>';
+    // eyes (small dots below huge brows)
+    s+='<circle cx="48" cy="38" r="4" fill="#fff"/><circle cx="49" cy="39" r="2" fill="#1a0830"/>';
+    s+='<circle cx="72" cy="38" r="4" fill="#fff"/><circle cx="73" cy="39" r="2" fill="#1a0830"/>';
+    // big cheeky grin
+    s+='<path d="M44 48 Q60 60 76 48" stroke="#1a0830" stroke-width="2.5" fill="none" stroke-linecap="round"/>';
+    // blush
+    s+='<ellipse cx="38" cy="44" rx="5" ry="3.5" fill="#ff8fb3" opacity=".5"/>';
+    s+='<ellipse cx="82" cy="44" rx="5" ry="3.5" fill="#ff8fb3" opacity=".5"/>';
+    // hair (messy spikes)
+    s+='<path d="M40 18 Q42 6 48 16 Q52 4 58 14 Q62 2 68 14 Q72 4 76 16 Q80 6 82 18" fill="#1a0830"/>';
+    // arms
+    s+='<line x1="40" y1="70" x2="26" y2="86" stroke="#f5d6a8" stroke-width="7" stroke-linecap="round"/>';
+    s+='<line x1="80" y1="70" x2="94" y2="86" stroke="#f5d6a8" stroke-width="7" stroke-linecap="round"/>';
+    // legs (short)
+    s+='<rect x="44" y="118" width="12" height="16" rx="6" fill="#f5d6a8"/>';
+    s+='<rect x="64" y="118" width="12" height="16" rx="6" fill="#f5d6a8"/>';
+    // shoes
+    s+='<ellipse cx="50" cy="134" rx="8" ry="4" fill="#e74c3c"/>';
+    s+='<ellipse cx="70" cy="134" rx="8" ry="4" fill="#e74c3c"/>';
+    break;
+
+  default:
+    s+='<circle cx="60" cy="70" r="30" fill="#aaa"/>';
+  }
+
+  s+='</svg>';
+  return s;
+}
+
+var CHAR_ORDER=['motu','patlu','bheem','singham','bean','tom','jerry','dora','doraemon','nobita','shinchan'];
+var CHAR_NAMES={motu:'Motu',patlu:'Patlu',bheem:'Bheem',singham:'Singham',bean:'Bean',tom:'Tom',jerry:'Jerry',dora:'Dora',doraemon:'Doraemon',nobita:'Nobita',shinchan:'Shinchan'};
+
+/* ═══ SLOT CREATION ═══ */
+function makeSlots(c,text){c.innerHTML='';var a=[];text.split('').forEach(function(ch){var e=document.createElement('div');if(ch===' '){e.style.width='10px';e.style.border='none';e.style.background='transparent'}else{e.className='slot'}c.appendChild(e);a.push({el:e,ch:ch})});return a}
+function fillSlot(s){s.el.textContent=s.ch;s.el.classList.add('done');var r=s.el.getBoundingClientRect();addSparkle(r.left+r.width/2,r.top+r.height/2,16);chime(620+Math.random()*260)}
+
+/* ═══ LETTER DELIVERY ═══ */
+function deliverLetter(areaEl,slot,charName,motion,labelEl,caption){
+  return new Promise(function(ok){
+    if(labelEl)labelEl.textContent=caption;
+    var ar=areaEl.getBoundingClientRect();
+    var sr=slot.el.getBoundingClientRect();
+    var tx=sr.left-ar.left+sr.width/2;
+    var ty=ar.height*.5;
+
+    var sprite=document.createElement('div');sprite.className='cs';
+    sprite.innerHTML=charSVG(charName);
+    // Add name tag under character
+    var tag=document.createElement('div');tag.className='char-tag';tag.textContent=CHAR_NAMES[charName]||charName;
+    sprite.appendChild(tag);
+
+    var ltr=document.createElement('div');ltr.className='cl';
+    ltr.textContent=slot.ch;
+    areaEl.appendChild(sprite);areaEl.appendChild(ltr);
+
+    var sx,sy,lx,ly;
+    switch(motion){
+      case 'build':sx=tx-60;sy=ty+8;lx=tx-12;ly=-40;break;
+      case 'construct':sx=-80;sy=ty;lx=-50;ly=ty-8;break;
+      case 'drag':sx=ar.width+70;sy=ty+4;lx=ar.width+30;ly=ty;break;
+      case 'plant':sx=tx-28;sy=-80;lx=tx-12;ly=-100;break;
+      case 'funny':sx=-90;sy=ty+16;lx=tx+70;ly=ty+30;break;
+      case 'chase':sx=-70;sy=ty;lx=ar.width+50;ly=ty-16;break;
+      case 'discover':sx=ar.width+70;sy=ty;lx=tx-12;ly=ar.height+30;break;
+      case 'gadget':sx=tx-28;sy=ty+12;lx=tx-12;ly=-50;break;
+      case 'struggle':sx=-70;sy=ty+14;lx=-40;ly=ty+20;break;
+      case 'spray':sx=-90;sy=ty-8;lx=tx-12;ly=ty;break;
+      case 'assemble':sx=tx+50;sy=ty;lx=tx+100;ly=-24;break;
+      case 'helicopter':sx=tx-28;sy=-90;lx=tx-12;ly=-110;break;
+      case 'machine':sx=tx-36;sy=ty+8;lx=tx-12;ly=ar.height+24;break;
+      case 'balloons':sx=tx-28;sy=ar.height+30;lx=tx-12;ly=ar.height+50;break;
+      default:sx=-70;sy=ty;lx=-40;ly=ty;
+    }
+
+    gsap.set(sprite,{x:sx,y:sy,opacity:0,scale:.8});
+    gsap.set(ltr,{x:lx,y:ly,opacity:0,scale:.5,rotate:motion==='funny'?25:0});
+
+    var dur=.7;// faster animations for 2-sec timing
+
+    var tl=gsap.timeline({onComplete:function(){
+      fillSlot(slot);
+      gsap.to([sprite,ltr],{opacity:0,y:'-=14',duration:.3,delay:.15,onComplete:function(){sprite.remove();ltr.remove()}});
+      ok();
+    }});
+
+    if(motion==='funny'){
+      tl.to(sprite,{opacity:1,x:tx-70,y:ty,duration:.2})
+        .to(sprite,{x:tx-18,y:ty,duration:.5,ease:'steps(5)'})
+        .to(ltr,{opacity:1,x:tx+20,y:ty-16,rotate:180,scale:.8,duration:.2},'<.15')
+        .to(ltr,{x:tx-12,y:ty-34,rotate:360,scale:1,duration:.4,ease:'bounce.out'})
+        .to(sprite,{y:ty-5,duration:.15,yoyo:true,repeat:1},'-=.2');
+    } else if(motion==='chase'){
+      tl.to(ltr,{opacity:1,duration:.15})
+        .to(ltr,{x:tx*1.4,y:ty-8,duration:.35,ease:'power1.in'})
+        .to(sprite,{opacity:1,x:tx*.5,y:ty,duration:.35,ease:'power1.in'},'<')
+        .to(ltr,{x:tx-12,y:ty-34,scale:1,duration:.4,ease:'back.out(1.7)'})
+        .to(sprite,{x:tx-40,y:ty-3,duration:.35,ease:'power2.out'},'<.08');
+    } else if(motion==='balloons'){
+      tl.to(sprite,{opacity:1,duration:.15})
+        .to(sprite,{x:tx-36,y:ty-8,duration:dur,ease:'power2.out'})
+        .to(ltr,{opacity:1,duration:.15},'<.08')
+        .to(ltr,{x:tx-12,y:ty-34,scale:1,duration:dur,ease:'power2.out'},'<');
+    } else {
+      tl.to(sprite,{opacity:1,duration:.15})
+        .to(sprite,{x:tx-40,y:ty-4,duration:dur,ease:'power2.out'},'<')
+        .to(ltr,{opacity:1,duration:.15},'<.08')
+        .to(ltr,{x:tx-12,y:ty-38,rotate:0,scale:1,duration:dur,ease:motion==='plant'||motion==='helicopter'?'bounce.out':'back.out(1.5)'},'<')
+        .to(sprite,{y:ty-10,duration:.15,yoyo:true,repeat:1},'-=.15');
+    }
+    tl.add(function(){var r=slot.el.getBoundingClientRect();addSparkle(r.left+r.width/2,r.bottom,6)},'<.05');
+  });
+}
+
+/* Icon convergence for NIKKY */
+var ICO={blocks:['🧱','🟪','🟧'],machine:['⚙️','🔧','✨'],gadget:['💫','⭐','🌟'],duo:['🧩','🔮','💎'],balloons:['🎈','🩷','💜','💛','🩵']};
+function convergeIcons(areaEl,slot,key,count,labelEl,caption){
+  return new Promise(function(ok){
+    if(labelEl)labelEl.textContent=caption;
+    var ar=areaEl.getBoundingClientRect();
+    var sr=slot.el.getBoundingClientRect();
+    var tx=sr.left-ar.left+sr.width/2;
+    var ty=ar.height*.46;
+    var icons=ICO[key]||['✨'];var bits=[],n=count||10;
+    for(var i=0;i<n;i++){
+      var b=document.createElement('div');b.className='ip';
+      b.textContent=icons[Math.random()*icons.length|0];areaEl.appendChild(b);
+      var ang=Math.random()*6.28,dist=110+Math.random()*80;
+      gsap.set(b,{x:tx+Math.cos(ang)*dist,y:ty+Math.sin(ang)*dist*.6,opacity:0,scale:.35,rotate:Math.random()*60-30});bits.push(b);
+    }
+    var ltr=document.createElement('div');ltr.className='cl';
+    ltr.textContent=slot.ch;areaEl.appendChild(ltr);
+    gsap.set(ltr,{x:tx-14,y:ty-10,opacity:0,scale:.3});
+    var tl=gsap.timeline({onComplete:function(){
+      fillSlot(slot);
+      gsap.to(bits,{opacity:0,duration:.3,onComplete:function(){bits.forEach(function(b){b.remove()})}});
+      gsap.to(ltr,{opacity:0,duration:.3,delay:.15,onComplete:function(){ltr.remove()}});ok();
+    }});
+    tl.to(bits,{opacity:1,duration:.2,stagger:.02})
+      .to(bits,{x:tx+(Math.random()*12-6),y:ty+(Math.random()*12-6),scale:.8,duration:.7,stagger:.03,ease:'power2.inOut'},'<')
+      .to(ltr,{opacity:1,scale:1,duration:.35,ease:'back.out(2)'},'-=.2');
+  });
+}
+
+/* ═══ LETTER SEQUENCE DATA ═══ */
+var HAPPY_SEQ=[
+  {ch:'H',w:1,c:'motu',m:'build',t:'Motu carries heavy materials and BUILDS the giant "H"!'},
+  {ch:'A',w:1,c:'patlu',m:'construct',t:'Patlu arrives with tools and CONSTRUCTS the "A"!'},
+  {ch:'P',w:1,c:'bheem',m:'drag',t:'Chhota Bheem pulls a rope and DRAGS the "P" into place!'},
+  {ch:'P',w:1,c:'singham',m:'plant',t:'Little Singham jumps from above and PLANTS the "P"!'},
+  {ch:'Y',w:1,c:'bean',m:'funny',t:'Mr. Bean stumbles in and accidentally CREATES the "Y"!'}
+];
+var BDAY_SEQ=[
+  {ch:'B',w:2,c:'tom',m:'chase',t:'Tom chases Jerry — together they place the "B"!'},
+  {ch:'I',w:2,c:'dora',m:'discover',t:'Dora arrives with her map and DISCOVERS the "I"!'},
+  {ch:'R',w:2,c:'doraemon',m:'gadget',t:'Doraemon uses a gadget to GENERATE the "R"!'},
+  {ch:'T',w:2,c:'nobita',m:'struggle',t:'Nobita struggles but finally places the "T"!'},
+  {ch:'H',w:2,c:'shinchan',m:'spray',t:'Shinchan skateboards in and SPRAY-PAINTS the "H"!'},
+  {ch:'D',w:2,c:'tom',m:'assemble',t:'Tom and Jerry ASSEMBLE the "D" together!'},
+  {ch:'A',w:2,c:'bheem',m:'drag',t:'Chhota Bheem lifts and places the "A"!'},
+  {ch:'Y',w:2,c:'singham',m:'helicopter',t:'Singham arrives by helicopter and lowers the "Y"!'}
+];
+var NIKKY_SEQ=[
+  {ch:'N',icon:'blocks',t:'Motu builds the "N" using giant blocks!'},
+  {ch:'I',icon:'machine',t:'Patlu\'s machine creates the "I"!'},
+  {ch:'K',icon:'gadget',t:'Doraemon\'s gadget conjures the first "K"!'},
+  {ch:'K',icon:'duo',t:'Nobita and Dora assemble the second "K"!'},
+  {ch:'Y',icon:'balloons',t:'Shinchan launches balloons that form the "Y"!'}
+];
+
+var hSlots,bSlots,nSlots;
+var LETTER_DELAY=1000; // 2 seconds total per letter (1s animation + 1s pause)
+
+function runSeq(seq,areaEl,labelEl,getSlot){
+  return seq.reduce(function(p,d){
+    return p.then(function(){
+      if(cancelled)return Promise.reject('skip');
+      var slot=getSlot(d);
+      if(d.icon)return convergeIcons(areaEl,slot,d.icon,10,labelEl,d.t).then(function(){return delay(LETTER_DELAY)});
+      return deliverLetter(areaEl,slot,d.c,d.m,labelEl,d.t).then(function(){return delay(LETTER_DELAY)});
+    });
+  },Promise.resolve());
+}
+
+/* ═══ SCENES ═══ */
+function showScene(id){document.querySelectorAll('.scene').forEach(function(s){s.classList.remove('on')});document.getElementById(id).classList.add('on')}
+
+function sceneIntro(){
+  showScene('sc-intro');starN=160;
+  var txt=document.getElementById('intro-txt'),num=document.getElementById('big23'),sub=document.getElementById('age-sub');
+  gsap.set(txt,{y:14});gsap.set(num,{opacity:0,scale:.35});
+  return new Promise(function(ok){
+    gsap.timeline({onComplete:ok})
+      .to(txt,{opacity:1,y:0,duration:1,ease:'power2.out'},.3)
+      .to(txt,{opacity:1,duration:1.4})
+      .to(txt,{opacity:0,y:-12,duration:.6})
+      .to(num,{opacity:1,scale:1,duration:.8,ease:'elastic.out(1,.6)'},'-=.15')
+      .add(function(){fireworkShow(1800);chime(523)})
+      .to(sub,{opacity:1,duration:.6},'-=.3')
+      .to({},{duration:1.2});
+  });
+}
+
+function sceneHappy(){
+  showScene('sc-happy');
+  hSlots=makeSlots(document.getElementById('row-happy'),'HAPPY');
+  bSlots=makeSlots(document.getElementById('row-bday'),'BIRTHDAY');
+  var area=document.getElementById('area-happy'),lbl=document.getElementById('happy-lbl');
+  var hi=0,bi=0;
+  return runSeq(HAPPY_SEQ,area,lbl,function(){return hSlots[hi++]})
+    .then(function(){
+      lbl.textContent='HAPPY is complete! 🎉';
+      document.getElementById('row-happy').classList.add('golden');
+      fireworkShow(1000);addConfetti(70,0);
+      return delay(1200);
+    })
+    .then(function(){
+      if(cancelled)return Promise.reject('skip');
+      lbl.textContent='Now let\'s build BIRTHDAY!';
+      return delay(600);
+    })
+    .then(function(){
+      return runSeq(BDAY_SEQ,area,lbl,function(){return bSlots[bi++]});
+    })
+    .then(function(){
+      lbl.textContent='HAPPY BIRTHDAY is complete! ✨🎉✨';
+      document.getElementById('row-bday').classList.add('golden');
+      fireworkShow(1800);addConfetti(140,0);setIntensity('full');
+      return delay(1800);
+    });
+}
+
+function sceneNikky(){
+  showScene('sc-nikky');
+  nSlots=makeSlots(document.getElementById('row-nikky'),'NIKKY');
+  var area=document.getElementById('area-nikky'),lbl=document.getElementById('nikky-lbl');
+  var ni=0;
+  return runSeq(NIKKY_SEQ,area,lbl,function(){return nSlots[ni++]})
+    .then(function(){
+      lbl.textContent='Everyone is here for you, Nikky! 💖';
+      addConfetti(160,0);fireworkShow(1600);return delay(1400);
+    });
+}
+
+/* ═══ FINALE ═══ */
+var totalCandles=5,blown=0;
+function buildCrew(){
+  var row=document.getElementById('crew-row');row.innerHTML='';
+  var anims=['aw','ab','as'];
+  CHAR_ORDER.forEach(function(name,i){
+    var el=document.createElement('div');el.className='crew-item '+anims[i%3];
+    el.style.animationDelay=(i*.1)+'s';el.innerHTML=charSVG(name);row.appendChild(el);
+  });
+}
+function buildCake(){
+  var box=document.getElementById('cake-box');
+  box.innerHTML='<svg class="cake-svg" viewBox="0 0 260 190" xmlns="http://www.w3.org/2000/svg">'+
+    '<ellipse cx="130" cy="178" rx="110" ry="12" fill="rgba(0,0,0,.2)"/>'+
+    '<rect x="32" y="114" width="196" height="56" rx="16" fill="url(#ck1)"/>'+
+    '<rect x="32" y="112" width="196" height="10" fill="#fff9f0" opacity=".4" rx="5"/>'+
+    '<rect x="56" y="66" width="148" height="54" rx="14" fill="url(#ck2)"/>'+
+    '<rect x="56" y="64" width="148" height="9" fill="#fff9f0" opacity=".4" rx="4"/>'+
+    '<rect x="80" y="24" width="100" height="48" rx="12" fill="url(#ck3)"/>'+
+    '<rect x="80" y="22" width="100" height="8" fill="#fff9f0" opacity=".4" rx="4"/>'+
+    '<circle cx="76" cy="136" r="4" fill="#ff6b9d" opacity=".6"/>'+
+    '<circle cx="130" cy="140" r="4" fill="#a855f7" opacity=".6"/>'+
+    '<circle cx="184" cy="136" r="4" fill="#38bdf8" opacity=".6"/>'+
+    '<text x="130" y="152" text-anchor="middle" font-family="Baloo 2,sans-serif" font-weight="800" font-size="30" fill="#fff9f0" style="filter:drop-shadow(0 0 6px rgba(255,200,140,.8))">23</text>'+
+    '<defs><linearGradient id="ck1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#a855f7"/><stop offset="1" stop-color="#7c3aed"/></linearGradient>'+
+    '<linearGradient id="ck2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff6b9d"/><stop offset="1" stop-color="#e8366d"/></linearGradient>'+
+    '<linearGradient id="ck3" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fbbf24"/><stop offset="1" stop-color="#f59e0b"/></linearGradient></defs></svg>';
+  blown=0;
+  var positions=[34,42,50,58,66];
+  for(var i=0;i<totalCandles;i++){
+    var c=document.createElement('div');c.className='candle';
+    c.style.left=positions[i]+'%';c.style.bottom='82%';
+    c.innerHTML='<div class="flame"></div><div class="candle-hit"></div>';
+    c.dataset.i=i;c.addEventListener('click',tapCandle);box.appendChild(c);
+  }
+  setTimeout(function(){
+    Array.prototype.forEach.call(box.querySelectorAll('.candle'),function(c,i){
+      setTimeout(function(){c.classList.add('lit');chime(680+i*35)},i*200);
+    });
+  },250);
+}
+function tapCandle(e){
+  var c=e.currentTarget;if(c.classList.contains('blown')||!c.classList.contains('lit'))return;
+  c.classList.add('blown');var r=c.getBoundingClientRect();
+  addSparkle(r.left+r.width/2,r.top,8);chime(440-blown*18);blown++;
+  if(blown>=totalCandles)setTimeout(wishGranted,400);
+}
+function wishGranted(){
+  document.getElementById('cake-hint').textContent='Your wish is granted! ✨';
+  fireworkShow(2800);addConfetti(220,0);setIntensity('full');startRoses();
+  setTimeout(function(){var r=document.getElementById('cake-box').getBoundingClientRect();addSparkle(r.left+r.width/2,r.top,50)},200);
+  setTimeout(function(){document.getElementById('msg-card').classList.add('reveal')},900);
+}
+function sceneFinale(){showScene('sc-finale');buildCrew();buildCake();document.getElementById('skip-btn').classList.remove('show')}
+
+/* ═══ MASTER ═══ */
+function skipAll(){cancelled=true;clearTimers();setTimeout(function(){cancelled=false;sceneFinale()},60)}
+function runShow(){
+  cancelled=false;
+  return sceneIntro()
+    .then(function(){if(cancelled)return Promise.reject('skip');return sceneHappy()})
+    .then(function(){if(cancelled)return Promise.reject('skip');return sceneNikky()})
+    .then(function(){if(cancelled)return Promise.reject('skip');sceneFinale()})
+    .catch(function(e){if(e!=='skip')console.error(e)});
+}
+
+document.getElementById('begin-btn').addEventListener('click',function(){
+  initAudio();if(actx&&actx.state==='suspended')actx.resume();
+  document.getElementById('start-screen').classList.add('gone');
+  document.getElementById('stage').hidden=false;
+  document.getElementById('sound-btn').classList.add('show');
+  document.getElementById('skip-btn').classList.add('show');
+  startAmb();runShow();
+},{once:true});
+document.getElementById('sound-btn').addEventListener('click',toggleMute);
+document.getElementById('skip-btn').addEventListener('click',skipAll);
+document.getElementById('replay-btn').addEventListener('click',function(){location.reload()});
+})();
+</script>
+</body>
+</html>
